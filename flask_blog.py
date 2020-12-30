@@ -1,11 +1,11 @@
 from flask import Flask, render_template, url_for, redirect, flash
 from forms import RegistrationForm, LoginForm
 
+
 app = Flask(__name__)
 
 #Set Secret Key
 app.config["SECRET_KEY"] = '3854bf36bf4e17cf1e8f8b778a0bc343'
-
 
 posts = [
     # Dummy Post 1
@@ -51,9 +51,12 @@ def register():
         return redirect(url_for("home"))
     return render_template("register.html", title="Register", form=form)
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        flash(f"Login successful for user {form.email.data}", "success")
+        return redirect(url_for("home"))
     return render_template("login.html", title="Login" ,form=form)
 
   
