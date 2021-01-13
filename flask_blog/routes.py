@@ -3,8 +3,10 @@ from flask import render_template, url_for, redirect, flash, request
 from flask_blog.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from flask_blog import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_blog import config
 import secrets
 import os
+from PIL import Image
 
 posts = [
     # Dummy Post 1
@@ -100,7 +102,9 @@ def save_picture(form_picture):
     ext = os.path.splitext(form_picture.filename)[-1]
     filename = random_filename + ext
     file_path = os.path.join(app.root_path, "static/profile_pics", filename)
-    form_picture.save(file_path)
+    image = Image.open(form_picture)
+    image.thumbnail(config.profile_picture_size)
+    image.save(file_path)
     return filename
 
 
